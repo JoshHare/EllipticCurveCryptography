@@ -1,5 +1,4 @@
 from random import randint
-from doubleandadd import multiply
 
 #miller rabin primality test 
 def is_prime(num, test_count):
@@ -23,13 +22,7 @@ def generate_prime(n):
         
 
 
-def generate_order(Point):
-    order = 1
-    current = G
-    while current:
-        current = multiply(Point,order)
-        order+=1
-    return order-1
+
 '''      
 p = generate_prime(128)
 print(p)
