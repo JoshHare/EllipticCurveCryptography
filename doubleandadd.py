@@ -1,4 +1,4 @@
-def double_and_add(P, n, a, p):
+def multiply(P, n, a, p):
     # Double and add algorithm for scalar multiplication on an elliptic curve
     
     Q = P
@@ -7,8 +7,13 @@ def double_and_add(P, n, a, p):
     while n > 0:
         if n % 2 == 1:
             R = add_points(R, Q, a, p)
-        
+            if R == None:
+                return None
+        if Q==None:
+            return None
         Q = double_point(Q, a, p)
+        if Q == None or R == None:
+            return None
         n //= 2
     
     return R
@@ -20,8 +25,15 @@ def double_point(point, a, p):
         # Point at infinity, return infinity
         return point
     
+    try:
+        inv = pow(2 * point[1], -1, p)
+    except ValueError:
+        return None
+    
     # Calculate the slope of the tangent line
-    slope = ((3 * point[0] ** 2) + a) * pow(2 * point[1], -1, p) % p
+    slope = ((3 * point[0] ** 2) + a) * inv % p
+    
+    
     
     # Calculate the x-coordinate of the result
     x = (slope ** 2 - 2 * point[0]) % p
@@ -30,6 +42,7 @@ def double_point(point, a, p):
     y = (slope * (point[0] - x) - point[1]) % p
     
     return (x, y)
+
 
 def add_points(point1, point2, a, p):
     # Add two points on the elliptic curve
@@ -45,7 +58,15 @@ def add_points(point1, point2, a, p):
         return double_point(point1, a, p)
     
     # Calculate the slope of the line
-    slope = ((point2[1] - point1[1]) * pow(point2[0] - point1[0], -1, p)) % p
+    num = (point2[1] - point1[1]) % p
+    den = (point2[0] - point1[0]) % p
+    
+    try:
+        inv = pow(den, -1, p)
+    except ValueError:
+        return None
+    
+    slope = (num * inv) % p
     
     # Calculate the x-coordinate of the result
     x = (slope ** 2 - point1[0] - point2[0]) % p
@@ -54,9 +75,9 @@ def add_points(point1, point2, a, p):
     y = (slope * (point1[0] - x) - point1[1]) % p
     
     return (x, y)
-
 # Example usage:
-# Define parameters for the elliptic curve y^2 = x^3 + ax + b (mod p)
+# Define parameters for the elliptic curve y^2 = x^3 + ax + b (mod p)'''
+'''
 a = 4
 p = 26167  # A prime number
 base_point = (7881, 16198)  # Example base point on the curve
@@ -67,6 +88,6 @@ three = (11761, 23455)
 # Scalar to multiply the base point, n
 scalar = 4
 
-result = double_and_add(base_point, scalar, a, p)
+result = multiply(base_point, scalar, a, p)
 print(f"The result of scalar multiplication ({scalar} times the base point {base_point}) is: {result}")
-print()
+print()'''
