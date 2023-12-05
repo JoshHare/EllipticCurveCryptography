@@ -17,29 +17,29 @@ def elliptic_curve_factorization(N, bound,p):
         a = randint(2,N-1)
         x = randint(2,N-1)
         y = randint(2,N-1)
+
         # Step 2: Set P = (a, b) and B ≡ b^2 − a^3 − A · a (mod N)
         P = (x,y)
         b = (y**2 - x**3 - a * x) % N
 
-        #invalid curve
+        #check if curve is valid
         if((4*pow(a,3,p) + 27 * pow(b,2,p)) % p == 0):
             continue
         
-        # Let E be the elliptic curve E : Y^2 = X^3 + AX + B
         # Step 3: Loop from j = 2 up to the specified bound
         for j in range(2, bound):
-            # Step 4: Compute Q ≡ jP (mod N) and set P = Q
-            P = multiply(P,j,a,N) # Scalar multiplication on the elliptic curve
-            # Step 5: If computation fails, we found a factor
+            #  Compute Q ≡ jP (mod N) and set P = Q
+            P = multiply(P,j,a,N) 
+
+            #If computation fails, we found a factor
             if P is None:
                 d = gcd(j,N)
                 if 1 < d < N:
-                    return d,a,b,x,y
+                    return d,a,b,x,y #curve found
                 elif d == N:
-                    break  # Go to Step 1 and choose a new curve and point
+                    break  # choose a new curve and point
 
-        # Step 8: Increment j and loop again
-        # Go to Step 1 and choose a new curve and point
+   
 
 def point_order(P, a, p):
     # Initialize variables
